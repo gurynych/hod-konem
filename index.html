@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Антикафе «Ход конём» — настольные игры для всех. Платите только за время: чай, кофе, печеньки и более 200 игр бесплатно. Бронируйте стол онлайн!">
+    <meta property="og:title" content="Антикафе «Ход конём» — настольные игры для всех">
+    <meta property="og:description" content="Платите только за время — чай, кофе, печеньки и настольные игры бесплатно. Бронируйте стол в антикафе «Ход конём»!">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="ru_RU">
+    <title>Антикафе «Ход конём» — настольные игры для всех</title>
+    <style>
+        /* Сброс стилей и базовые настройки */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c2c2c;
+            background-color: #f8f5f0;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        /* Переменные и утилиты */
+        :root {
+            --cream: #f8f5f0;
+            --emerald: #1f6f50;
+            --amber: #e0a526;
+            --dark: #2c2c2c;
+            --radius: 12px;
+            --gap: 24px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--amber);
+            color: #fff;
+            text-decoration: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #d1951a;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--emerald);
+            color: var(--emerald);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--emerald);
+            color: #fff;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 48px;
+            color: var(--emerald);
+        }
+
+        .grid {
+            display: grid;
+            gap: var(--gap);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* === 1. Шапка и Бургер-меню === */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            z-index: 1000;
+            padding: 12px 0;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--emerald);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: var(--emerald);
+        }
+
+        .cta-header {
+            white-space: nowrap;
+        }
+
+        /* Бургер */
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .burger span {
+            width: 24px;
+            height: 2px;
+            background-color: var(--dark);
+            transition: transform 0.3s ease;
+        }
+
+        .burger.active span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .burger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .burger.active span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* Оверлей-меню */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(248, 245, 240, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            transition: left 0.4s ease;
+            padding-top: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .mobile-menu-overlay.active {
+            left: 0;
+        }
+
+        .mobile-menu-overlay a {
+            font-size: 1.25rem;
+            color: var(--dark);
+            text-decoration: none;
+        }
+
+        /* === 2. Главный экран (Hero) === */
+        .hero {
+            padding: 120px 16px 80px;
+            background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
+            color: #fff;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "♟️ ♜️ 🎲 🎯";
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            font-size: 80px;
+            opacity: 0.1;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 16px;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero .btn {
+            margin: 0 8px;
+        }
+
+        /* === 3. О клубе === */
+        .about {
+            padding: 80px 16px;
+            text-align: center;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .about-card {
+            background: #fff;
+            padding: 32px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .about-card h3 {
+            color: var(--emerald);
+            font-size: 1.25rem;
+        }
+
+        /* === 4. Преимущества === */
+        .advantages {
+            padding: 80px 16px;
+            background-color: #fff;
+        }
+
+        .adv-grid {
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+
+        .adv-card {
+            background: #f8f5f0;
+            padding: 24px;
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid #eae5dd;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .adv-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .adv-card h4 {
+            color: var(--emerald);
+            margin-bottom: 8px;
+        }
+
+        /* === 5. Игры и мероприятия === */
+        .games {
+            padding: 80px 16px;
+        }
+
+        .games-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .game-card {
+            background: #fff;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .game-header {
+            background: var(--emerald);
+            color: #fff;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .game-header h3 {
+            margin: 0;
+        }
+
+        .game-body {
+            padding: 20px;
+        }
+
+        .game-meta {
+            display: flex;
+            gap: 16px;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .game-details details {
+            margin-top: 16px;
+        }
+
+        .game-details summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--emerald);
+        }
+
+        .events-list {
+            background: #fff;
+            padding: 32px;
+            border-radius: var(--radius);
+            border: 1px solid #eae5dd;
+        }
+
+        .event-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0e9d8;
+        }
+
+        .event-item:last-child {
+            border-bottom: none;
+        }
+
+        .event-info h4 {
+            margin: 0 0 4px;
+        }
+
+        .event-info p {
+            margin: 0;
+            color: #666;
+        }
+
+        /* === 6. Тарифы === */
+        .prices {
+            padding: 80px 16px;
+            background-color: #f8f5f0;
+        }
+
+        .prices-grid {
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .price-card {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 32px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .price-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .price-card.best {
+            border-color: var(--amber);
+            position: relative;
+        }
+
+        .price-card.best::after {
+            content: "Хит";
+            position: absolute;
+            top: -12px;
+            right: -12px;
+            background: var(--amber);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .price-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--emerald);
+            margin: 16px 0;
+        }
+
+        .price-includes {
+            background: #e8f4ea;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 24px 0;
+            font-size: 0.9rem;
+        }
+
+        .faq {
+            margin-top: 64px;
+        }
+
+        .faq details {
+            background: #fff;
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .faq summary {
+            font-weight: 600;
+            color: var(--emerald);
+            cursor: pointer;
+        }
+
+        /* === 7. Отзывы === */
+        .reviews {
+            padding: 80px 16px;
+            background: #fff;
+        }
+
+        .reviews-grid {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .review-card {
+            background: #f8f5f0;
+            padding: 24px;
+            border-radius: var(--radius);
+            position: relative;
+        }
+
+        .review-card::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 6rem;
+            color: rgba(31, 111, 80, 0.1);
+            line-height: 1;
+        }
+
+        .review-text {
+            font-style: italic;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .review-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--emerald);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        /* === 8. Контакты и форма === */
+        .contacts {
+            padding: 80px 16px;
+            background: #f8f5f0;
+        }
+
+        .contacts-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+        }
+
+        .contact-info h3 {
+            color: var(--emerald);
+            margin-bottom: 16px;
+        }
+
+        .contact-info p {
+            margin-bottom: 8px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin-right: 16px;
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .map-placeholder {
+            background: #e0e0e0;
+            height: 300px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ccc;
+            border-radius: var(--radius);
+            font-size: 1rem;
+        }
+
+        .form-message {
+            padding: 16px;
+            border-radius: var(--radius);
+            text-align: center;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .form-message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        /* === 9. Подвал === */
+        footer {
+            background: var(--dark);
+            color: #ccc;
+            padding: 40px 16px 20px;
+        }
+
+        .footer-top {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            gap: 32px;
+        }
+
+        .footer-col h4 {
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        .footer-col a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .footer-col a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 24px;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+        }
+
+        /* === Адаптивность === */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .cta-header {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                border-radius: 8px;
+                flex-shrink: 0;
+            }
+
+            .burger {
+                display: flex;
+            }
+
+            .hero {
+                padding: 100px 16px 60px;
+            }
+
+            .contacts-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-top {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .map-placeholder {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 1. Шапка (Header) -->
+<header>
+    <div class="header-inner container">
+        <a href="#hero" class="logo">♞ Ход конём</a>
+        <nav class="nav" aria-label="Основная навигация">
+            <a href="#about">О клубе</a>
+            <a href="#games">Игры</a>
+            <a href="#prices">Тарифы</a>
+            <a href="#reviews">Отзывы</a>
+            <a href="#contacts">Контакты</a>
+        </nav>
+        <a href="#contacts" class="btn cta-header">Забронировать стол</a>
+        <button class="burger" aria-label="Открыть меню" aria-controls="mobile-menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</header>
+
+<!-- Мобильное оверлей-меню -->
+<nav id="mobile-menu" class="mobile-menu-overlay" aria-label="Мобильная навигация">
+    <a href="#about">О клубе</a>
+    <a href="#games">Игры</a>
+    <a href="#prices">Тарифы</a>
+    <a href="#reviews">Отзывы</a>
+    <a href="#contacts">Контакты</a>
+    <a href="#contacts" class="btn" style="margin-top: 24px;">Забронировать стол</a>
+</nav>
+
+<main>
+    <!-- 2. Главный экран (Hero) -->
+    <section id="hero" class="hero">
+        <div class="container">
+            <h1>Твой ход. Твоя компания. Твоё время.</h1>
+            <p>Платите только за время — чай, кофе, печеньки и игры бесплатно.</p>
+            <div>
+                <a href="#contacts" class="btn">Забронировать стол</a>
+                <a href="#games" class="btn btn-outline">Смотреть мероприятия</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. О клубе -->
+    <section id="about" class="about section">
+        <div class="container">
+            <h2 class="section-title">Что такое антикафе «Ход конём»?</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 48px;">Никаких сложных счетов: платите за минуты, а всё пространство — ваше. Идеально для студентов, компаний друзей и новичков.</p>
+            <div class="about-grid grid">
+                <div class="about-card fade-in">
+                    <h3>🎓 Помощь новичкам</h3>
+                    <p>Наши ведущие объяснят правила любой игры за 5 минут. Не бойтесь спрашивать!</p>
+                </div>
+                <div class="about-card fade-in" style="transition-delay: 0.2s;">
+                    <h3>🤝 Приходи один</h3>
+                    <p>Не с кем играть? Присоединяйся к открытым столам — найдешь команду прямо на месте.</p>
+                </div>
+                <div class="about-card fade-in" style="transition-delay: 0.4s;">
+                    <h3>☕ Всё включено</h3>
+                    <p>Чай, кофе, какао, печенье и настолки уже входят в стоимость времени.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Преимущества -->
+    <section id="advantages" class="advantages section">
+        <div class="container">
+            <h2 class="section-title">Почему выбирают нас</h2>
+            <div class="adv-grid grid">
+                <div class="adv-card fade-in">
+                    <h4>📚 200+ игр</h4>
+                    <p>От простых карточных до сложных стратегий. Есть даже редкие новинки.</p>
+                </div>
+                <div class="adv-card fade-in" style="transition-delay: 0.1s;">
+                    <h4>🏆 Турниры</h4>
+                    <p>Каждые выходные — турниры с призами. «Мафия», «Бэнг!», «Экивоки» и другие.</p>
+                </div>
+                <div class="adv-card fade-in" style="transition-delay: 0.2s;">
+                    <h4>🌃 Тематические вечера</h4>
+                    <p>Мафия, DnD, квизы, вечера настолок по вселенным игр и кино.</p>
+                </div>
+                <div class="adv-card fade-in" style="transition-delay: 0.3s;">
+                    <h4>🎮 Кикер и приставка</h4>
+                    <p>Отдохните от карт — у нас есть настольный футбол и Sony PlayStation.</p>
+                </div>
+                <div class="adv-card fade-in" style="transition-delay: 0.4s;">
+                    <h4>🛋️ Зоны отдыха</h4>
+                    <p>Тихие уголки для дуэльных игр и просторные залы для шумных компаний.</p>
+                </div>
+                <div class="adv-card fade-in" style="transition-delay: 0.5s;">
+                    <h4>🕐 Гибкий график</h4>
+                    <p>Работаем до 02:00 в пятницу и субботу. Идеально для вечерних посиделок.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Игры и мероприятия -->
+    <section id="games" class="games section">
+        <div class="container">
+            <h2 class="section-title">Популярные игры</h2>
+            <div class="games-grid grid">
+                <!-- Игра 1 -->
+                <div class="game-card fade-in">
+                    <div class="game-header">
+                        <h3>Колонизаторы 🏝️</h3>
+                    </div>
+                    <div class="game-body">
+                        <div class="game-meta">
+                            <span>⭐⭐⭐ Сложность</span>
+                            <span>👥 3-4 игрока</span>
+                            <span>⏱ 90 мин</span>
+                        </div>
+                        <p>Классика жанра. Стройте поселения, собирайте ресурсы и торгуйтесь с друзьями.</p>
+                        <div class="game-details">
+                            <details>
+                                <summary>Как играть?</summary>
+                                <p>Бросайте кубики, добывайте дерево, шерсть, зерно, кирпич и руду. Ваша цель — первым набрать 10 победных очков.</p>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+                <!-- Игра 2 -->
+                <div class="game-card fade-in" style="transition-delay: 0.1s;">
+                    <div class="game-header">
+                        <h3>Мафия 🌙</h3>
+                    </div>
+                    <div class="game-body">
+                        <div class="game-meta">
+                            <span>⭐⭐ Сложность</span>
+                            <span>👥 6-15 игроков</span>
+                            <span>⏱ 60 мин</span>
+                        </div>
+                        <p>Психологическая игра на интуицию и блеф. Кто здесь волк в овечьей шкуре?</p>
+                        <div class="game-details">
+                            <details>
+                                <summary>Как играть?</summary>
+                                <p>Город засыпает, просыпается мафия. Мирные жители должны вычислить преступников до того, как их станет больше.</p>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+                <!-- Игра 3 -->
+                <div class="game-card fade-in" style="transition-delay: 0.2s;">
+                    <div class="game-header">
+                        <h3>Бэнг! 🤠</h3>
+                    </div>
+                    <div class="game-body">
+                        <div class="game-meta">
+                            <span>⭐⭐ Сложность</span>
+                            <span>👥 4-7 игроков</span>
+                            <span>⏱ 40 мин</span>
+                        </div>
+                        <p>Быстрая дуэльная игра в сеттинге Дикого Запада.</p>
+                        <div class="game-details">
+                            <details>
+                                <summary>Как играть?</summary>
+                                <p>У каждого своя тайная роль (Шериф, Бандит, Ренегат). Ваша задача — выжить и выполнить цель роли.</p>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+                <!-- Игра 4 -->
+                <div class="game-card fade-in" style="transition-delay: 0.3s;">
+                    <div class="game-header">
+                        <h3>Имаджинари 🦄</h3>
+                    </div>
+                    <div class="game-body">
+                        <div class="game-meta">
+                            <span>⭐ Сложность</span>
+                            <span>👥 4-8 игроков</span>
+                            <span>⏱ 30 мин</span>
+                        </div>
+                        <p>Ассоциативная игра с сюрреалистичными картинками. Проверка фантазии.</p>
+                        <div class="game-details">
+                            <details>
+                                <summary>Как играть?</summary>
+                                <p>Ведущий загадывает ассоциацию к своей карте, остальные подкладывают похожие. Нужно угадать карту ведущего.</p>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+                <!-- Игра 5 -->
+                <div class="game-card fade-in" style="transition-delay: 0.4s;">
+                    <div class="game-header">
+                        <h3>Уно 🌈</h3>
+                    </div>
+                    <div class="game-body">
+                        <div class="game-meta">
+                            <span>⭐ Сложность</span>
+                            <span>👥 2-10 игроков</span>
+                            <span>⏱ 20 мин</span>
+                        </div>
+                        <p>Легендарная карточная игра для любой компании.</p>
+                        <div class="game-details">
+                            <details>
+                                <summary>Как играть?</summary>
+                                <p>Избавляйтесь от карт, подкидывая их по цвету или номиналу. Главное — вовремя крикнуть «Уно!»</p>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+                <!-- Игра 6 -->
+                <div class="game-card fade-in" style="transition-delay: 0.5s;">
+                    <div class="game-header">
+                        <h3>Экивоки 🗣️</h3>
+                    </div>
+                    <div class="game-body">
+                        <div class="game-meta">
+                            <span>⭐⭐ Сложность</span>
+                            <span>👥 4-10 игроков</span>
+                            <span>⏱ 60 мин</span>
+                        </div>
+                        <p>Вам придется объяснять слова жестами, пением, рисованием и даже лепкой из пластилина.</p>
+                        <div class="game-details">
+                            <details>
+                                <summary>Как играть?</summary>
+                                <p>Киньте кубик, чтобы узнать способ объяснения. На счету каждая секунда!</p>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="margin-top: 80px;">Ближайшие мероприятия</h2>
+            <div class="events-list">
+                <div class="event-item fade-in">
+                    <div class="event-info">
+                        <h4>Пятничная Мафия</h4>
+                        <p>24 октября, 20:00</p>
+                    </div>
+                    <a href="#contacts" class="btn btn-outline">Записаться</a>
+                </div>
+                <div class="event-item fade-in" style="transition-delay: 0.1s;">
+                    <div class="event-info">
+                        <h4>Турнир по "Бэнг!"</h4>
+                        <p>25 октября, 15:00</p>
+                    </div>
+                    <a href="#contacts" class="btn btn-outline">Записаться</a>
+                </div>
+                <div class="event-item fade-in" style="transition-delay: 0.2s;">
+                    <div class="event-info">
+                        <h4>Вечер DnD</h4>
+                        <p>26 октября, 18:00</p>
+                    </div>
+                    <a href="#contacts" class="btn btn-outline">Записаться</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Тарифы -->
+    <section id="prices" class="prices section">
+        <div class="container">
+            <h2 class="section-title">Прозрачные цены</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 48px;">Вы платите только за время пребывания. В стоимость входит абсолютно всё.</p>
+            <div class="prices-grid grid">
+                <div class="price-card fade-in">
+                    <h3>Будние дни</h3>
+                    <div class="price-amount">3 ₽/мин</div>
+                    <p>Понедельник — Четверг</p>
+                    <div class="price-includes">
+                        ✅ Чай, кофе, какао<br>
+                        ✅ Печенье, сладости<br>
+                        ✅ Все 200+ игр
+                    </div>
+                </div>
+                <div class="price-card fade-in best">
+                    <h3>Выходные</h3>
+                    <div class="price-amount">4 ₽/мин</div>
+                    <p>Пятница — Воскресенье</p>
+                    <div class="price-includes">
+                        ✅ Чай, кофе, какао<br>
+                        ✅ Печенье, сладости<br>
+                        ✅ Все 200+ игр
+                    </div>
+                </div>
+                <div class="price-card fade-in" style="transition-delay: 0.2s;">
+                    <h3>Абонемент</h3>
+                    <div class="price-amount">1500 ₽</div>
+                    <p>10 часов игры</p>
+                    <div class="price-includes">
+                        ✅ Срок действия: 30 дней<br>
+                        ✅ Выгодно для постоянных гостей<br>
+                        ✅ Приоритетное бронирование
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq">
+                <h3 style="text-align: center; margin-bottom: 32px;">Частые вопросы</h3>
+                <details class="fade-in">
+                    <summary>Нужно ли бронировать стол заранее?</summary>
+                    <p>В будни — не обязательно, но желательно. В пятницу и субботу бронирование обязательно, иначе мест может не хватить.</p>
+                </details>
+                <details class="fade-in" style="transition-delay: 0.1s;">
+                    <summary>Можно ли со своей едой?</summary>
+                    <p>Да, можно приносить свою еду и напитки (кроме крепкого алкоголя). У нас есть микроволновка.</p>
+                </details>
+                <details class="fade-in" style="transition-delay: 0.2s;">
+                    <summary>Есть ли парковка?</summary>
+                    <p>Рядом есть городская платная парковка. Для гостей абонемента — скидка 50% по промокоду из SMS.</p>
+                </details>
+                <details class="fade-in" style="transition-delay: 0.3s;">
+                    <summary>Что такое стоп-чек?</summary>
+                    <p>Максимальная сумма за день. Как только вы наиграли на 900 ₽, время становится бесплатным до конца дня.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Отзывы -->
+    <section id="reviews" class="reviews section">
+        <div class="container">
+            <h2 class="section-title">Говорят гости</h2>
+            <div class="reviews-grid grid">
+                <div class="review-card fade-in">
+                    <p class="review-text">«Пришли с друзьями первый раз, вообще не понимали правила. Администратор Дима сел с нами и за 10 минут объяснил "Колонизаторов". Зависли на 4 часа!»</p>
+                    <div class="review-author">
+                        <div class="avatar">АН</div>
+                        <div>
+                            <strong>Анна, 22 года</strong>
+                            <div style="font-size: 0.8rem; color: #666;">Студентка</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card fade-in" style="transition-delay: 0.1s;">
+                    <p class="review-text">«Лучший антикафе в городе. Библиотека игр просто огромная, нашел тут редкие дополнения к своим любимым настолкам. Цены честные.»</p>
+                    <div class="review-author">
+                        <div class="avatar">МС</div>
+                        <div>
+                            <strong>Максим, 28 лет</strong>
+                            <div style="font-size: 0.8rem; color: #666;">IT-специалист</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card fade-in" style="transition-delay: 0.2s;">
+                    <p class="review-text">«Атмосфера — просто 10 из 10. Ламповый свет, удобные диваны, никто не гонит. Теперь ходим сюда каждую пятницу на Мафию.»</p>
+                    <div class="review-author">
+                        <div class="avatar">ЕК</div>
+                        <div>
+                            <strong>Екатерина, 19 лет</strong>
+                            <div style="font-size: 0.8rem; color: #666;">Студентка</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card fade-in" style="transition-delay: 0.3s;">
+                    <p class="review-text">«Боялась идти одна, думала буду сидеть в углу. В итоге через 15 минут играла в "Уно" с тремя крутыми ребятами. Спасибо за открытые столы!»</p>
+                    <div class="review-author">
+                        <div class="avatar">ОЛ</div>
+                        <div>
+                            <strong>Ольга, 25 лет</strong>
+                            <div style="font-size: 0.8rem; color: #666;">Дизайнер</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<!-- 8. Контакты и бронирование -->
+<section id="contacts" class="contacts section">
+    <div class="container">
+        <h2 class="section-title">Контакты и бронирование</h2>
+        <div class="contacts-grid grid">
+            <div class="contact-info">
+                <h3>Как нас найти</h3>
+                <p>📍 г. Москва, ул. Игровая, д. 42, вход со двора</p>
+                <p>🕐 Мы работаем:</p>
+                <ul>
+                    <li>Пн–Чт: 12:00 – 00:00</li>
+                    <li>Пт: 12:00 – 02:00</li>
+                    <li>Сб: 10:00 – 02:00</li>
+                    <li>Вс: 12:00 – 00:00</li>
+                </ul>
+                <div class="social-links">
+                    <a href="#">VK</a>
+                    <a href="#">Telegram</a>
+                </div>
+                <div class="map-placeholder">
+                    <!-- Здесь можно вставить iframe Яндекс.Карт -->
+                    🗺️ Интерактивная карта
+                </div>
+            </div>
+            <div class="booking-form">
+                <h3>Забронировать стол</h3>
+                <p>Оставьте заявку, и мы перезвоним вам для подтверждения брони в течение 15 минут.</p>
+                <form id="bookingForm">
+                    <div class="form-group">
+                        <label for="name">Ваше имя</label>
+                        <input type="text" id="name" name="name" required placeholder="Иван Иванов">
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Дата</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Время</label>
+                        <input type="time" id="time" name="time" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="people">Количество человек</label>
+                        <select id="people" name="people" required>
+                            <option value="">Выберите</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3-4</option>
+                            <option>5-6</option>
+                            <option>7+</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Телефон</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="+7 (999) 000-00-00">
+                    </div>
+                    <button type="submit" class="btn">Забронировать</button>
+                </form>
+                <div id="formMessage" class="form-message"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main><!-- 9. Подвал (Footer) -->
+<footer>
+    <div class="container">
+        <div class="footer-top">
+            <div class="footer-col">
+                <h4>«Ход конём»</h4>
+                <a href="#about">О клубе</a>
+                <a href="#games">Игры</a>
+                <a href="#prices">Тарифы</a>
+            </div>
+            <div class="footer-col">
+                <h4>Разное</h4>
+                <a href="#reviews">Отзывы</a>
+                <a href="#contacts">Контакты</a>
+                <a href="#">Политика конфиденциальности</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 «Ход конём». Все права защищены.</p>
+        </div>
+    </div>
+</footer><script>
+    // Бургер-меню: переключение классов для открытия/закрытия оверлея
+    const burger = document.querySelector('.burger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    burger.addEventListener('click', () => {
+        burger.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        burger.setAttribute('aria-expanded', mobileMenu.classList.contains('active'));
+    });
+
+    // Закрытие мобильного меню при клике на ссылку
+    mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            burger.classList.remove('active');
+            mobileMenu.classList.remove('active');
+            burger.setAttribute('aria-expanded', 'false');
+        });
+    });
+
+    // Анимация появления секций при скролле (Intersection Observer)
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    fadeEls.forEach(el => {
+        observer.observe(el);
+    });
+
+    // Обработка формы бронирования (без перезагрузки)
+    const form = document.getElementById('bookingForm');
+    const messageBox = document.getElementById('formMessage');
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // Простая валидация
+        if (!form.checkValidity()) {
+            return;
+        }
+
+        // Блокируем кнопку и показываем лоадер
+        const submitBtn = form.querySelector('button');
+        const btnText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Отправляем...';
+
+        // Имитация отправки данных (setTimeout для визуального эффекта)
+        setTimeout(() => {
+            messageBox.className = 'form-message success';
+            messageBox.textContent = 'Спасибо! Мы перезвоним для подтверждения брони.';
+            form.reset();
+            submitBtn.disabled = false;
+            submitBtn.textContent = btnText;
+        }, 1500);
+    });
+</script></body>
+</html>
